@@ -68,7 +68,18 @@ input,select,textarea{font-family:inherit}
 @media(max-width:760px){.topbar-divider{display:none}}
 .today-info{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
 .today-info-date{font-size:13px;font-weight:600;color:var(--ink)}
-.today-info-stats{font-size:11px;color:var(--ink-faint);letter-spacing:.02em}
+.today-info-stats{font-size:11px;color:var(--ink-faint);letter-spacing:.02em;display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:3px}
+.stat-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;background:var(--bg);border:1px solid var(--border);font-weight:600}
+.stat-pill .num{font-family:"Fraunces",serif;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
+.stat-pill .lbl{font-size:10px;color:var(--ink-soft);letter-spacing:.02em}
+.stat-pill.today{background:var(--accent-bg);border-color:var(--accent-soft)}
+.stat-pill.today .num{color:var(--accent)}
+.stat-pill.urgent{background:var(--short-bg);border-color:#FCA5A5}
+.stat-pill.urgent .num{color:var(--short)}
+.stat-pill.week{background:var(--weekly-bg);border-color:#BFDBFE}
+.stat-pill.week .num{color:var(--weekly)}
+.stat-pill.month{background:var(--monthly-bg);border-color:#A7F3D0}
+.stat-pill.month .num{color:var(--monthly)}
 .today-info-stats .urgent{color:var(--short);font-weight:700}
 .today-info-stats .accent{color:var(--accent);font-weight:700}
 .view-tabs{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:3px;gap:2px}
@@ -453,11 +464,6 @@ input,select,textarea{font-family:inherit}
         <button class="today-btn" onclick="goToday()">오늘</button>
       </div>
       <div class="filter-row">
-        <button class="chip active" data-cat="all">전체 <span class="cnt" id="c-all">0</span></button>
-        <button class="chip" data-cat="short">단기 <span class="cnt" id="c-short">0</span></button>
-        <button class="chip" data-cat="weekly">주간 <span class="cnt" id="c-weekly">0</span></button>
-        <button class="chip" data-cat="monthly">월간 <span class="cnt" id="c-monthly">0</span></button>
-        <span style="width:1px;height:16px;background:var(--border);margin:0 4px"></span>
         <button class="chip" data-status="pending" onclick="setStatus('pending')">진행 중만</button>
         <button class="chip" data-status="done" onclick="setStatus('done')">완료만</button>
       </div>
@@ -986,23 +992,18 @@ function renderTopbar() {
   const monthCnt = pending.filter(t => t.category==='monthly' && sameMonth(parseDate(t.due), today0)).length;
 
   document.getElementById('top-stats').innerHTML =
-    `오늘 <span class="accent">${todayCnt}</span> · 지연 <span class="urgent">${overdueCnt}</span> · 이번 주 <strong>${weekCnt}</strong> · 이번 달 <strong>${monthCnt}</strong>`;
+    `<span class="stat-pill today"><span class="num">${todayCnt}</span><span class="lbl">오늘</span></span>` +
+    `<span class="stat-pill urgent"><span class="num">${overdueCnt}</span><span class="lbl">지연</span></span>` +
+    `<span class="stat-pill week"><span class="num">${weekCnt}</span><span class="lbl">이번 주</span></span>` +
+    `<span class="stat-pill month"><span class="num">${monthCnt}</span><span class="lbl">이번 달</span></span>`;
 
   document.getElementById('today-panel-date').textContent =
     `${today.getMonth()+1}.${today.getDate()} ${WD_NAMES[today.getDay()]}요일`;
 }
 
 function renderChips() {
-  const pending = state.tasks.filter(t => !isTaskDone(t));
-  document.getElementById('c-all').textContent = pending.length;
-  document.getElementById('c-short').textContent = pending.filter(t=>!t.daily && t.category==='short').length;
-  document.getElementById('c-weekly').textContent = pending.filter(t=>!t.daily && t.category==='weekly').length;
-  document.getElementById('c-monthly').textContent = pending.filter(t=>!t.daily && t.category==='monthly').length;
-
-  document.querySelectorAll('.chip[data-cat]').forEach(b => {
-    b.classList.toggle('active', b.dataset.cat === state.filter.category);
-    b.onclick = () => { state.filter.category = b.dataset.cat; render(); };
-  });
+  // 분류 필터 칩은 제거됨 — state.filter.category는 'all'로 고정 유지
+  state.filter.category = 'all';
   document.querySelectorAll('.chip[data-status]').forEach(b => {
     b.classList.toggle('active', b.dataset.status === state.filter.status);
   });
@@ -1521,8 +1522,10 @@ function openModal(id) {
     document.getElementById('f-assignee').value = '';
     document.getElementById('f-dept').value = '';
     document.getElementById('f-time').value = '';
-    document.getElementById('f-due-date').value = fmtDate(new Date());
-    document.getElementById('f-due-month').value = fmtMonth(new Date());
+    // 월/주/일 뷰에서 선택한 날짜(state.currentDate)를 기본값으로 사용
+    const baseDate = state.currentDate || new Date();
+    document.getElementById('f-due-date').value = fmtDate(baseDate);
+    document.getElementById('f-due-month').value = fmtMonth(baseDate);
     state.editingDaily = false;
     state.editingImportant = false;
     state.editingInactive = false;
