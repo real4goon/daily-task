@@ -45,7 +45,7 @@ input,select,textarea{font-family:inherit}
 .pin-title{font-weight:700;font-size:17px;margin-top:8px}
 .pin-sub{font-size:12px;color:var(--ink-faint);margin-top:4px;letter-spacing:.02em}
 .pin-boxes{display:flex;justify-content:center;gap:10px;margin:28px 0 14px}
-.pin-input{width:52px;height:60px;border:2px solid var(--border-strong);border-radius:12px;background:var(--surface);font-family:"Fraunces",serif;font-size:32px;font-weight:500;text-align:center;color:var(--accent);transition:all .15s;font-variant-numeric:tabular-nums;caret-color:var(--accent)}
+.pin-input{width:52px;height:60px;border:2px solid var(--border-strong);border-radius:12px;background:var(--surface);font-family:"Fraunces",serif;font-size:32px;font-weight:500;text-align:center;color:var(--accent);transition:all .15s;font-variant-numeric:tabular-nums;caret-color:var(--accent);-webkit-text-security:disc;text-security:disc}
 .pin-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px rgba(180,83,9,.15);transform:translateY(-1px)}
 .pin-input.filled{background:var(--accent-bg);border-color:var(--accent-soft)}
 .pin-input.error{border-color:var(--short);background:var(--short-bg);color:var(--short);animation:shake .4s}
@@ -112,7 +112,16 @@ input,select,textarea{font-family:inherit}
 .monthly-task-chip{background:white;color:var(--monthly);padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid #A7F3D0;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .12s}
 .monthly-task-chip:hover{border-color:var(--monthly);transform:translateY(-1px)}
 .monthly-task-chip.done{opacity:.5;text-decoration:line-through}
-.month-days{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border)}
+.month-days{display:flex;flex-direction:column;background:var(--border)}
+.month-week-group{display:flex;flex-direction:column;background:var(--surface)}
+.month-week-banner{background:var(--weekly-bg);border-bottom:1px solid var(--border);border-top:1px solid var(--border);padding:5px 10px;display:flex;flex-wrap:wrap;gap:5px;align-items:center;min-height:28px}
+.month-week-banner-label{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--weekly);text-transform:uppercase;margin-right:4px}
+.month-week-banner-chip{background:white;color:var(--weekly);padding:2px 9px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid #BFDBFE;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .12s}
+.month-week-banner-chip:hover{border-color:var(--weekly);transform:translateY(-1px)}
+.month-week-banner-chip.done{opacity:.5;text-decoration:line-through}
+.month-week-banner-chip.important-chip{border-color:var(--important);color:var(--important);background:var(--important-bg)}
+.month-week-banner-empty{display:none}
+.month-week-days{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border)}
 .day-cell{background:var(--surface);min-height:100px;padding:6px;cursor:pointer;transition:background .12s;display:flex;flex-direction:column;gap:2px;position:relative}
 @media(max-width:600px){.day-cell{min-height:68px;padding:3px}}
 .day-cell:hover{background:var(--bg)}
@@ -250,6 +259,31 @@ input,select,textarea{font-family:inherit}
 .manage-select-all:hover{color:var(--ink)}
 
 .clear-history-btn{padding:6px 10px;border-radius:6px;font-size:11px;font-weight:600;color:var(--ink-soft);background:var(--bg);border:1px solid var(--border);cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-left:auto}
+
+/* 캘린더 export 항목 */
+.cal-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--bg);border-radius:9px;margin-bottom:5px;transition:all .12s;border:1px solid transparent;cursor:pointer}
+.cal-item:hover{background:var(--surface);border-color:var(--border)}
+.cal-item.selected{background:#DBEAFE;border-color:#93C5FD}
+.cal-item.already-uploaded{background:var(--monthly-bg);border-color:#A7F3D0}
+.cal-item.already-uploaded .cal-status{color:var(--monthly);font-weight:700}
+.cal-check{flex-shrink:0;width:18px;height:18px;border-radius:5px;border:2px solid var(--border-strong);background:var(--surface);display:flex;align-items:center;justify-content:center;margin-top:2px;transition:all .12s}
+.cal-check.checked{background:var(--weekly);border-color:var(--weekly)}
+.cal-check.checked::after{content:"✓";color:white;font-size:11px;font-weight:700}
+.cal-item-info{flex:1;min-width:0}
+.cal-item-title{font-weight:600;font-size:13px;margin-bottom:3px}
+.cal-item-sub{font-size:11px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px}
+.cal-status{font-size:10px;padding:1px 6px;border-radius:4px;background:var(--bg);color:var(--ink-soft);font-weight:600}
+
+.cal-category-group{margin-bottom:14px}
+.cal-category-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.cal-category-header h4{margin:0;font-size:12px;font-weight:700;letter-spacing:.05em;color:var(--ink);text-transform:uppercase}
+.cal-category-header .dot{width:8px;height:8px;border-radius:999px}
+.cal-category-header .cnt{margin-left:auto;font-size:10px;color:var(--ink-faint);font-weight:600}
+
+.cal-info-box{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:12px 14px;margin-bottom:14px}
+.cal-info-title{font-size:12px;font-weight:700;color:var(--weekly);margin-bottom:5px}
+.cal-info-text{font-size:11px;color:var(--ink-soft);line-height:1.5}
+.cal-info-text strong{color:var(--ink)}
 .clear-history-btn:hover{background:var(--daily-bg);color:var(--daily);border-color:#DDD6FE}
 
 /* 비활성 토글 (대기모드) */
@@ -396,6 +430,7 @@ input,select,textarea{font-family:inherit}
       <button class="add-btn" onclick="openModal()"><span>+</span> 새 업무</button>
       <button class="icon-btn" onclick="showBrief(true)" title="중요 공지 다시 보기">⭐</button>
       <button class="icon-btn" onclick="openDailyManager()" title="매일 업무 관리">🔁</button>
+      <button class="icon-btn" onclick="openCalendarExport()" title="구글 캘린더로 보내기">📅</button>
       <button class="icon-btn" onclick="syncNow()" title="새로고침">↻</button>
       <button class="icon-btn" onclick="logout()" title="PIN 잠금">🔒</button>
     </div>
@@ -628,6 +663,43 @@ input,select,textarea{font-family:inherit}
   </div>
 </div>
 
+<!-- CALENDAR EXPORT POPUP -->
+<div class="modal-overlay" id="cal-export">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-header">
+      <h2>📅 구글 캘린더로 보내기</h2>
+      <button class="modal-close" onclick="closeCalendarExport()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="cal-info-box">
+        <div class="cal-info-title">💡 알아두실 점</div>
+        <div class="cal-info-text">
+          선택한 업무를 <strong>영선님의 기본 구글 캘린더</strong>에 [YS] 접두어로 이벤트로 등록합니다.<br>
+          • <strong>매일 업무</strong>: 1년간 반복 이벤트<br>
+          • <strong>단기</strong>: 해당 날짜(시간 있으면 시간, 없으면 종일)<br>
+          • <strong>주간</strong>: 해당 주 월~금 종일<br>
+          • <strong>월간</strong>: 해당 월 전체 종일<br>
+          이미 올린 업무는 <strong>초록색</strong>으로 표시됩니다.
+        </div>
+      </div>
+      
+      <div class="manage-summary-bar">
+        <div class="manage-summary-text" id="cal-summary">전체 0개 · 선택 0개</div>
+        <button class="manage-select-all" onclick="toggleCalSelectAll()">전체 선택/해제</button>
+      </div>
+      
+      <div id="cal-export-list"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="btn-cal-remove" onclick="confirmCalRemove()" style="display:none">캘린더에서 제거</button>
+      <div class="modal-footer-right">
+        <button class="btn-secondary" onclick="closeCalendarExport()">닫기</button>
+        <button class="btn-primary" id="btn-cal-push" onclick="confirmCalPush()">캘린더에 등록</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="notice" id="notice"></div>
 <div class="loading" id="loading"><div class="spinner"></div></div>
 
@@ -649,7 +721,9 @@ let state = {
   editingWeekdays: '',
   pin: null,
   // 매일 관리 팝업용
-  managerSelection: new Set()
+  managerSelection: new Set(),
+  // 캘린더 export 팝업용
+  calSelection: new Set()
 };
 
 // ================ API ================
@@ -694,7 +768,7 @@ async function tryPin(pin) {
   try {
     await api('verify');
     msg.textContent = '✓ 인증 성공'; msg.className = 'pin-msg success';
-    localStorage.setItem('workboard-pin', pin);
+    // 자동 로그인 해제: PIN을 localStorage에 저장하지 않음
     setTimeout(async () => {
       document.getElementById('pin-gate').classList.add('hidden');
       document.getElementById('app').style.display = 'flex';
@@ -716,7 +790,8 @@ async function tryPin(pin) {
 
 function logout() {
   if (!confirm('잠금 상태로 전환하시겠습니까?')) return;
-  localStorage.removeItem('workboard-pin'); location.reload();
+  localStorage.removeItem('workboard-pin'); 
+  location.reload();
 }
 
 // ================ 데이터 ================
@@ -1014,6 +1089,7 @@ function renderMonth() {
   const tasks = filteredTasks();
   const cur = state.currentDate;
 
+  // 월간 업무 배너 (기존 유지)
   const monthlyOfView = tasks.filter(t => !t.daily && t.category==='monthly' && sameMonth(parseDate(t.due), cur));
   if (monthlyOfView.length > 0) {
     const banner = document.createElement('div');
@@ -1033,37 +1109,94 @@ function renderMonth() {
     weekdays.map((w,i) => `<div class="weekday ${i===0?'sun':i===6?'sat':''}">${w}</div>`).join('')
   }</div>`;
 
-  const days = document.createElement('div'); days.className = 'month-days';
+  const monthDays = document.createElement('div');
+  monthDays.className = 'month-days';
+  
   const firstDay = new Date(cur.getFullYear(), cur.getMonth(), 1);
   const lastDay = new Date(cur.getFullYear(), cur.getMonth()+1, 0);
   const startPad = firstDay.getDay();
   const totalCells = Math.ceil((startPad+lastDay.getDate())/7)*7;
   const today = new Date(); today.setHours(0,0,0,0);
-
-  for (let i=0; i<totalCells; i++) {
-    const cellDate = new Date(firstDay);
-    cellDate.setDate(i-startPad+1);
-    const other = cellDate.getMonth() !== cur.getMonth();
-    const isToday = sameDay(cellDate, today);
-    const dow = cellDate.getDay();
-    const shortTasks = tasks.filter(t => !t.daily && t.category==='short' && sameDay(parseDate(t.due), cellDate));
-    const weeklyOnSunday = (dow===0 && !other) ?
-      tasks.filter(t => !t.daily && t.category==='weekly' && sameWeekOfMonth(parseDate(t.due), cellDate)) : [];
-    const allDayTasks = [...shortTasks, ...weeklyOnSunday];
-    const cell = document.createElement('div');
-    cell.className = `day-cell ${other?'other-month':''} ${isToday?'today':''} ${dow===0?'sun':dow===6?'sat':''}`;
-    let html = `<span class="day-num">${cellDate.getDate()}</span>`;
-    allDayTasks.slice(0,3).forEach(t => {
-      const timeHtml = t.time ? `<span class="time">${esc(t.time)}</span>` : '';
-      const impMark = t.important ? '⭐' : '';
-      html += `<div class="day-task ${t.done?'done':t.category} ${t.important?'important':''}" title="${esc(t.title)}">${impMark}${timeHtml}${esc(t.title)}</div>`;
-    });
-    if (allDayTasks.length > 3) html += `<div class="day-more">+${allDayTasks.length-3}</div>`;
-    cell.innerHTML = html;
-    cell.onclick = () => { state.currentDate = cellDate; setView('day'); };
-    days.appendChild(cell);
+  
+  // 주 단위로 묶어서 렌더
+  for (let weekStart = 0; weekStart < totalCells; weekStart += 7) {
+    const weekGroup = document.createElement('div');
+    weekGroup.className = 'month-week-group';
+    
+    // 이 주의 첫 날짜 계산
+    const firstCellDate = new Date(firstDay);
+    firstCellDate.setDate(weekStart - startPad + 1);
+    
+    // 이 주에 해당하는 주간 업무 찾기 (이 주에 현재 월의 날짜가 있어야 함)
+    let weeklyTasksForThisWeek = [];
+    // 이 주 7일 중 현재 월에 속하는 날짜 하나를 기준으로 판단
+    for (let d = 0; d < 7; d++) {
+      const cellDate = new Date(firstDay);
+      cellDate.setDate(weekStart - startPad + 1 + d);
+      if (cellDate.getMonth() === cur.getMonth()) {
+        weeklyTasksForThisWeek = tasks.filter(t => 
+          !t.daily && t.category === 'weekly' && sameWeekOfMonth(parseDate(t.due), cellDate)
+        );
+        break;
+      }
+    }
+    
+    // 주간 업무 배너 (해당 주에 주간 업무가 있을 때만 표시)
+    if (weeklyTasksForThisWeek.length > 0) {
+      const banner = document.createElement('div');
+      banner.className = 'month-week-banner';
+      // 이 주의 "N주차" 라벨 계산 (현재 월 기준)
+      let weekNumLabel = '';
+      for (let d = 0; d < 7; d++) {
+        const cellDate = new Date(firstDay);
+        cellDate.setDate(weekStart - startPad + 1 + d);
+        if (cellDate.getMonth() === cur.getMonth()) {
+          weekNumLabel = `${cur.getMonth()+1}월 ${getWeekOfMonth(cellDate)}주차`;
+          break;
+        }
+      }
+      banner.innerHTML = `<span class="month-week-banner-label">📌 ${weekNumLabel}</span>`;
+      weeklyTasksForThisWeek.forEach(t => {
+        const chip = document.createElement('div');
+        chip.className = 'month-week-banner-chip' + (t.done?' done':'') + (t.important?' important-chip':'');
+        chip.innerHTML = `<span onclick="event.stopPropagation();toggleCheck('${t.id}')" style="cursor:pointer">${t.done?'✓':'○'}</span>${t.important?'⭐':''}${esc(t.title)}`;
+        chip.onclick = () => editTask(t.id);
+        banner.appendChild(chip);
+      });
+      weekGroup.appendChild(banner);
+    }
+    
+    // 7일 셀
+    const weekDays = document.createElement('div');
+    weekDays.className = 'month-week-days';
+    
+    for (let i = 0; i < 7; i++) {
+      const cellDate = new Date(firstDay);
+      cellDate.setDate(weekStart + i - startPad + 1);
+      const other = cellDate.getMonth() !== cur.getMonth();
+      const isToday = sameDay(cellDate, today);
+      const dow = cellDate.getDay();
+      const shortTasks = tasks.filter(t => !t.daily && t.category==='short' && sameDay(parseDate(t.due), cellDate));
+      
+      const cell = document.createElement('div');
+      cell.className = `day-cell ${other?'other-month':''} ${isToday?'today':''} ${dow===0?'sun':dow===6?'sat':''}`;
+      let html = `<span class="day-num">${cellDate.getDate()}</span>`;
+      shortTasks.slice(0,3).forEach(t => {
+        const timeHtml = t.time ? `<span class="time">${esc(t.time)}</span>` : '';
+        const impMark = t.important ? '⭐' : '';
+        html += `<div class="day-task ${t.done?'done':t.category} ${t.important?'important':''}" title="${esc(t.title)}">${impMark}${timeHtml}${esc(t.title)}</div>`;
+      });
+      if (shortTasks.length > 3) html += `<div class="day-more">+${shortTasks.length-3}</div>`;
+      cell.innerHTML = html;
+      cell.onclick = () => { state.currentDate = cellDate; setView('day'); };
+      weekDays.appendChild(cell);
+    }
+    
+    weekGroup.appendChild(weekDays);
+    monthDays.appendChild(weekGroup);
   }
-  wrap.appendChild(days);
+  
+  wrap.appendChild(monthDays);
   return wrap;
 }
 
@@ -1589,6 +1722,177 @@ async function confirmBulkDelete() {
   }
 }
 
+// ================ CALENDAR EXPORT ================
+function openCalendarExport() {
+  state.calSelection = new Set();
+  renderCalendarExport();
+  document.getElementById('cal-export').classList.add('open');
+}
+function closeCalendarExport() {
+  document.getElementById('cal-export').classList.remove('open');
+  state.calSelection = new Set();
+}
+
+function renderCalendarExport() {
+  const box = document.getElementById('cal-export-list');
+  box.innerHTML = '';
+  
+  // 전체 업무 (활성 상태만, 완료된 것 제외)
+  const allTasks = state.tasks.filter(t => {
+    if (t.inactive) return false;
+    if (!t.daily && t.done) return false;
+    return true;
+  });
+  
+  if (allTasks.length === 0) {
+    box.innerHTML = '<div class="empty-state">캘린더에 올릴 수 있는 업무가 없습니다.</div>';
+    updateCalSummary();
+    return;
+  }
+  
+  // 카테고리별 그룹
+  const groups = [
+    {key:'daily', title:'매일 반복', color:'var(--daily)', tasks: allTasks.filter(t=>t.daily)},
+    {key:'short', title:'단기 업무', color:'var(--short)', tasks: allTasks.filter(t=>!t.daily && t.category==='short').sort(sortByDue)},
+    {key:'weekly', title:'주간 업무', color:'var(--weekly)', tasks: allTasks.filter(t=>!t.daily && t.category==='weekly').sort(sortByDue)},
+    {key:'monthly', title:'월간 업무', color:'var(--monthly)', tasks: allTasks.filter(t=>!t.daily && t.category==='monthly').sort(sortByDue)}
+  ];
+  
+  groups.forEach(g => {
+    if (g.tasks.length === 0) return;
+    const groupDiv = document.createElement('div');
+    groupDiv.className = 'cal-category-group';
+    groupDiv.innerHTML = `
+      <div class="cal-category-header">
+        <span class="dot" style="background:${g.color}"></span>
+        <h4>${g.title}</h4>
+        <span class="cnt">${g.tasks.length}개</span>
+      </div>
+    `;
+    
+    g.tasks.forEach(t => {
+      const alreadyUploaded = !!t.calendar_event_id;
+      const isSelected = state.calSelection.has(t.id);
+      
+      let subLine = '';
+      if (t.daily) subLine = `${weekdayText(t.weekdays)}${t.time?' · '+esc(t.time):' · 종일'}`;
+      else if (t.category==='short') subLine = `${esc(t.due||'')}${t.time?' '+esc(t.time):' · 종일'}`;
+      else if (t.category==='weekly') subLine = weekLabel(t.due);
+      else if (t.category==='monthly') subLine = monthLabel(t.due);
+      
+      const item = document.createElement('div');
+      item.className = `cal-item ${isSelected?'selected':''} ${alreadyUploaded?'already-uploaded':''}`;
+      item.innerHTML = `
+        <div class="cal-check ${isSelected?'checked':''}"></div>
+        <div class="cal-item-info">
+          <div class="cal-item-title">${t.important?'⭐':''}${esc(t.title)}</div>
+          <div class="cal-item-sub">
+            <span>${subLine}</span>
+            ${alreadyUploaded?'<span class="cal-status">✓ 등록됨</span>':''}
+          </div>
+        </div>
+      `;
+      item.onclick = () => {
+        if (state.calSelection.has(t.id)) state.calSelection.delete(t.id);
+        else state.calSelection.add(t.id);
+        renderCalendarExport();
+      };
+      groupDiv.appendChild(item);
+    });
+    box.appendChild(groupDiv);
+  });
+  
+  updateCalSummary();
+}
+
+function updateCalSummary() {
+  const total = state.tasks.filter(t => !t.inactive && (t.daily || !t.done)).length;
+  const selected = state.calSelection.size;
+  const selectedTasks = [...state.calSelection].map(id => state.tasks.find(t=>t.id===id)).filter(Boolean);
+  const hasUploaded = selectedTasks.some(t => t.calendar_event_id);
+  
+  document.getElementById('cal-summary').textContent = 
+    `전체 ${total}개 · 선택 ${selected}개`;
+  
+  const pushBtn = document.getElementById('btn-cal-push');
+  const removeBtn = document.getElementById('btn-cal-remove');
+  
+  if (selected === 0) {
+    pushBtn.textContent = '캘린더에 등록';
+    pushBtn.disabled = true;
+    pushBtn.style.opacity = '.5';
+    removeBtn.style.display = 'none';
+  } else {
+    pushBtn.disabled = false;
+    pushBtn.style.opacity = '1';
+    pushBtn.textContent = `선택 ${selected}개 등록`;
+    removeBtn.style.display = hasUploaded ? 'block' : 'none';
+  }
+}
+
+function toggleCalSelectAll() {
+  const allTasks = state.tasks.filter(t => {
+    if (t.inactive) return false;
+    if (!t.daily && t.done) return false;
+    return true;
+  });
+  const allIds = allTasks.map(t => t.id);
+  const allSelected = allIds.length > 0 && allIds.every(id => state.calSelection.has(id));
+  if (allSelected) {
+    state.calSelection = new Set();
+  } else {
+    state.calSelection = new Set(allIds);
+  }
+  renderCalendarExport();
+}
+
+async function confirmCalPush() {
+  const ids = [...state.calSelection];
+  if (ids.length === 0) return;
+  
+  if (!confirm(`선택한 ${ids.length}개 업무를 구글 캘린더에 등록하시겠습니까?\n(이미 등록된 업무는 다시 등록됩니다)\n\n⚠ 첫 실행 시 "캘린더 접근 권한" 승인이 필요할 수 있습니다.`)) return;
+  
+  showLoading(true);
+  try {
+    const resp = await api('pushToCalendar', {ids});
+    const r = resp.results || {};
+    // 성공한 업무들의 calendar_event_id 갱신을 위해 재로드
+    await loadTasks();
+    renderCalendarExport();
+    
+    let msg = `✓ ${r.success || 0}개 등록 성공`;
+    if (r.failed > 0) msg += ` · ${r.failed}개 실패`;
+    showNotice(msg, r.failed > 0 ? 'error' : 'success');
+  } catch(err) {
+    showNotice('캘린더 등록 실패: ' + err.message, 'error');
+  } finally {
+    showLoading(false);
+  }
+}
+
+async function confirmCalRemove() {
+  const selectedTasks = [...state.calSelection].map(id => state.tasks.find(t=>t.id===id)).filter(Boolean);
+  const uploaded = selectedTasks.filter(t => t.calendar_event_id);
+  if (uploaded.length === 0) {
+    showNotice('캘린더에 등록된 업무가 선택되지 않았습니다');
+    return;
+  }
+  if (!confirm(`선택한 ${uploaded.length}개 업무를 캘린더에서 제거하시겠습니까?\n(이 앱의 업무는 유지됩니다)`)) return;
+  
+  showLoading(true);
+  try {
+    const ids = uploaded.map(t => t.id);
+    const resp = await api('removeFromCalendar', {ids});
+    await loadTasks();
+    renderCalendarExport();
+    showNotice(`캘린더에서 ${resp.removed}개 제거 완료`, 'success');
+  } catch(err) {
+    showNotice('제거 실패: ' + err.message, 'error');
+  } finally {
+    showLoading(false);
+  }
+}
+
 // ================ INIT ================
 (async function init() {
   setupPinInputs();
@@ -1601,19 +1905,16 @@ async function confirmBulkDelete() {
   if (window.matchMedia('(max-width:760px)').matches) {
     document.getElementById('mobile-tabs').style.display = 'flex';
   }
-  const savedPin = localStorage.getItem('workboard-pin');
-  if (savedPin && savedPin.length===4) {
-    const inputs = document.querySelectorAll('.pin-input');
-    savedPin.split('').forEach((ch,i) => { if(inputs[i]){inputs[i].value=ch;inputs[i].classList.add('filled');}});
-    tryPin(savedPin);
-  } else {
-    setTimeout(() => { const first = document.querySelector('.pin-input'); if(first) first.focus(); }, 100);
-  }
+  // 기존에 저장된 PIN이 있으면 제거 (v7부터 자동 로그인 해제)
+  localStorage.removeItem('workboard-pin');
+  // 항상 첫 번째 PIN 입력창에 포커스
+  setTimeout(() => { const first = document.querySelector('.pin-input'); if(first) first.focus(); }, 100);
   document.getElementById('modal').onclick = (e) => { if(e.target.id==='modal') closeModal(); };
   document.getElementById('brief').onclick = (e) => { if(e.target.id==='brief') closeBrief(); };
   document.getElementById('daily-manager').onclick = (e) => { if(e.target.id==='daily-manager') closeDailyManager(); };
+  document.getElementById('cal-export').onclick = (e) => { if(e.target.id==='cal-export') closeCalendarExport(); };
   document.addEventListener('keydown', (e) => { 
-    if(e.key==='Escape') { closeModal(); closeBrief(); closeDailyManager(); }
+    if(e.key==='Escape') { closeModal(); closeBrief(); closeDailyManager(); closeCalendarExport(); }
   });
 })();
 </script>
