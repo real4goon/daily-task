@@ -103,7 +103,11 @@ input,select,textarea{font-family:inherit}
 .nav-controls{display:flex;align-items:center;gap:8px}
 .nav-arrow{width:32px;height:32px;border-radius:8px;background:var(--surface);border:1px solid var(--border);font-size:12px;color:var(--ink-soft);display:flex;align-items:center;justify-content:center}
 .nav-arrow:hover{background:var(--bg);color:var(--ink)}
-.nav-label{font-family:"Fraunces",serif;font-weight:500;font-size:24px;letter-spacing:-.02em;min-width:150px;text-align:center}
+.nav-label{font-family:"Fraunces",serif;font-weight:500;font-size:24px;letter-spacing:-.02em;min-width:150px;text-align:center;position:relative}
+.nav-label.day-clickable{cursor:pointer;text-decoration:underline dotted 1.5px var(--border-strong);text-underline-offset:4px;transition:color .12s}
+.nav-label.day-clickable:hover{color:var(--accent)}
+.nav-label.day-clickable::after{content:"📅";font-size:13px;margin-left:6px;opacity:.5}
+.nav-date-input{position:absolute;opacity:0;width:0;height:0;pointer-events:none;top:0;left:50%}
 .today-btn{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:600;background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-soft)}
 
 .filter-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
@@ -458,7 +462,7 @@ input,select,textarea{font-family:inherit}
       <div class="nav-bar" id="nav-bar">
         <div class="nav-controls">
           <button class="nav-arrow" onclick="navigate(-1)">◀</button>
-          <div class="nav-label" id="nav-label">—</div>
+          <div class="nav-label" id="nav-label" onclick="onNavLabelClick()">—<input type="date" class="nav-date-input" id="nav-date-input" onchange="onNavDatePick(this.value)" /></div>
           <button class="nav-arrow" onclick="navigate(1)">▶</button>
         </div>
         <button class="today-btn" onclick="goToday()">오늘</button>
@@ -1070,17 +1074,35 @@ function navigate(dir) {
 function renderNav() {
   const d = state.currentDate;
   const label = document.getElementById('nav-label');
-  if (state.view==='month') label.textContent = `${d.getFullYear()}. ${d.getMonth()+1}`;
-  else if (state.view==='week') {
+  const input = document.getElementById('nav-date-input');
+  if (state.view==='month') {
+    label.textContent = `${d.getFullYear()}. ${d.getMonth()+1}`;
+    label.classList.remove('day-clickable');
+  } else if (state.view==='week') {
     const start = startOfWeek(d); const end = new Date(start); end.setDate(end.getDate()+6);
     label.textContent = `${start.getMonth()+1}.${start.getDate()} – ${end.getMonth()+1}.${end.getDate()}`;
+    label.classList.remove('day-clickable');
+  } else if (state.view==='day') {
+    label.childNodes[0].nodeValue = `${d.getMonth()+1}. ${d.getDate()}`;
+    label.classList.add('day-clickable');
+    input.value = fmtDate(d);
   }
-  else if (state.view==='day') label.textContent = `${d.getMonth()+1}. ${d.getDate()}`;
 }
 function startOfWeek(d) {
   const x = new Date(d); x.setHours(0,0,0,0);
   x.setDate(x.getDate()-x.getDay());
   return x;
+}
+function onNavLabelClick() {
+  if (state.view !== 'day') return;
+  const input = document.getElementById('nav-date-input');
+  input.showPicker ? input.showPicker() : input.click();
+}
+function onNavDatePick(val) {
+  if (!val) return;
+  const [y,m,d] = val.split('-').map(Number);
+  state.currentDate = new Date(y, m-1, d);
+  render();
 }
 
 // ================ MONTH ================
